@@ -1,0 +1,87 @@
+{
+  "name": "table_name",
+  "children": [
+    "x", "y", "z"
+  ]
+},
+
+{
+  "tableName": "name"
+  "node": "x"
+},
+
+node: string,
+transactions: [
+	txn_id:
+]
+
+
+
+
+{
+      node: "X",
+      transavtions: [
+        {
+          "txn_id": 0,
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited": -3,
+          "marked": false,
+        },
+        {
+          "txn_id": "",
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited": +3,
+          "marked": false
+        }
+        ],
+      node : "y"
+	tranwsaction: [
+        {
+          "txn_id": "",
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited": -3,
+          "marked": false,
+        },
+        {
+          "txn_id": "",
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited":
+          +
+          -3,
+          "marked": false,
+          "chained_txn": []
+        }
+      ]
+      "z": [
+        {
+          "txn_id": "",
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited":
+          +
+          -3,
+          "marked": false,
+          "chained_txn": []
+        },
+        {
+          "txn_id": "",
+          "date": "",
+          "description": "",
+          "finalBalance": 86468,
+          "credit_debited":
+          +
+          -3,
+          "marked": false,
+          "chained_txn": []
+        }
+      ]
+}
