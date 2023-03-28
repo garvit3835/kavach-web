@@ -10,6 +10,7 @@ import node4 from "./node4";
 import "reactflow/dist/style.css";
 import initialEdges from "./initialEdges";
 import initialNodes from "./initialNodes";
+import axios from "axios";
 
 // import './index.css';
 
@@ -106,13 +107,29 @@ const fitViewOptions = {
 const ExpandAndCollapse = (props) => {
 	const reactFlowWrapper = useRef(null);
 	const [nodes, setNodes, onNodesChange] = useNodesState([]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const [getNodes, setgetNodes] = useState()
 	const onConnect = useCallback(
 		(params) => setEdges((eds) => addEdge(params, eds)),
 		[]
     );
     
+    // let getNodes = []
     
+    useEffect(() => {
+      
+        const article = {
+            "password": "RAJA2712",
+            "file": "feb.pdf",
+            "credit_score": 8.7
+        };
+        axios.post('https://fin-sights.onrender.com/api/trail_analysis/v1/fund_flow', article)
+            .then(response => setgetNodes([response.data.data]));
+    
+
+    }, []);
+
+
 
 	useEffect(() => {
 		setNodes([
@@ -127,12 +144,14 @@ const ExpandAndCollapse = (props) => {
 				};
 			}),
 		]);
-	}, []);
+    }, [getNodes]);
+    
+    console.log(nodes)
 
     const handleNodeClick = async (e, data) => {
 
         
-		const findChildren = nodes.filter((item) => item?.data?.parent === data.id);
+		const findChildren = nodes.filter((item) => item?.data?.parent === data.id); // data gives access to label, parent, children
         if (!findChildren.length) {
             let t = 1
 			const itemChildren = [
@@ -175,11 +194,41 @@ const ExpandAndCollapse = (props) => {
 			setNodes(nodes.concat(itemChildren));
         }
         else {
-            setNodes([...nodes.filter((item) => item?.data?.parent !== data.id)]);
+			childs=[]
+			childAppender(initialNodes,data.id);
+			console.log(childs);
+            setNodes([...nodes.filter((item) => !childs.includes(item.id) )]);
             // console.log(nodes)
 			setEdges([...edges.filter((item) => data.id !== item.source)]);
 		}
 	};
+
+	function childChecker(element){
+		console.log(element);
+		return false;
+	}
+
+	let checkflag=false;
+	let childs=[]
+	function childAppender(array,reqd){
+		array.forEach((ele)=>{
+			if(checkflag===false){
+				if(ele.parent===reqd){
+					checkflag=true;
+				}
+			}
+			if(checkflag===true ){
+				childs.push(ele.id);
+			}
+			if(ele.children && ele.children.length!==0){
+				childAppender(ele.children,reqd);
+			}
+			else{
+				return
+			}
+		})
+		checkflag=false;
+	}
 
 	return (
 		<div
