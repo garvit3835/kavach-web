@@ -4,6 +4,7 @@ import ReactFlow, {
 	useReactFlow,
 	useNodesState,
 	useEdgesState,
+	MarkerType
 } from "reactflow";
 import "reactflow/dist/style.css";
 
