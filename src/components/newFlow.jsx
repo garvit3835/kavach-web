@@ -13,89 +13,10 @@ import initialNodes from "./initialNodes";
 import axios from "axios";
 
 // import './index.css';
+var tryNodes = []
 
 const proOptions = { hideAttribution: true };
-
-
-// const initialNodes = [
-// 	{
-// 		id: "1",
-// 		name: "test",
-// 		children: [
-// 			{
-// 				id: "2",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "3",
-// 						name: "c",
-// 						parent: "2",
-// 						children: [node4],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "5",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "6",
-// 						name: "c",
-// 						parent: "5",
-// 						children: [
-// 							{
-// 								id: "7",
-// 								parent: "6",
-// 								name: "hello",
-// 							},
-// 						],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "8",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "9",
-// 						name: "c",
-// 						parent: "8",
-// 						children: [
-// 							{
-// 								id: "10",
-// 								parent: "9",
-// 								name: "d",
-// 							},
-// 						],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "11",
-// 				name: "f",
-// 				parent: "1",
-// 			},
-// 		],
-// 	},
-// ];
-
-// const initialEdges = [
-// 	{
-// 		id: "edges-e5-7",
-// 		source: "0",
-// 		target: "1",
-// 		label: "+",
-// 		labelBgPadding: [8, 4],
-// 		labelBgBorderRadius: 4,
-// 		labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
-// 		markerEnd: {
-// 			type: MarkerType.ArrowClosed,
-// 		},
-// 	},
-// ];
+// tryNodes !==[] && console.log(tryNodes)
 
 let id = 1;
 const getId = () => `${id++}`;
@@ -107,33 +28,40 @@ const fitViewOptions = {
 const ExpandAndCollapse = (props) => {
 	const reactFlowWrapper = useRef(null);
 	const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const [getNodes, setgetNodes] = useState()
+	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+	const [getNodes, setgetNodes] = useState([]);
 	const onConnect = useCallback(
 		(params) => setEdges((eds) => addEdge(params, eds)),
 		[]
     );
     
-    // let getNodes = []
-    
-    useEffect(() => {
-      
+    const fetch = async () => {
         const article = {
-            "password": "RAJA2712",
-            "file": "feb.pdf",
-            "credit_score": 8.7
+            password: "RAJA897924767",
+            file: "feb.pdf",
+            credit_score: 8.7,
         };
-        axios.post('https://fin-sights.onrender.com/api/trail_analysis/v1/fund_flow', article)
-            .then(response => setgetNodes([response.data.data]));
-    
-
-    }, []);
-
-
+        await axios
+            .post(
+                "https://fin-sights.onrender.com/api/trail_analysis/v1/fund_flow",
+                article
+            )
+            .then((res) => {
+                // console.log(res.data.data)
+                // setgetNodes([response.data.data]);
+                // res.data.data.children.forEach((item) => {
+                tryNodes.push(res.data.data);
+                setgetNodes(tryNodes)
+                // console.log(tryNodes)
+                // })
+                
+            });
+    };
+    fetch();
 
 	useEffect(() => {
 		setNodes([
-			...initialNodes.map((item) => {
+			...getNodes.map((item) => {
 				return {
 					id: item.id,
 					type: item?.children?.length ? "default" : "output",
@@ -144,25 +72,23 @@ const ExpandAndCollapse = (props) => {
 				};
 			}),
 		]);
-    }, [getNodes]);
-    
-    console.log(nodes)
+	}, [getNodes]);
 
-    const handleNodeClick = async (e, data) => {
+	// console.log(nodes);
 
-        
+	const handleNodeClick = async (e, data) => {
 		const findChildren = nodes.filter((item) => item?.data?.parent === data.id); // data gives access to label, parent, children
-        if (!findChildren.length) {
-            let t = 1
+		if (!findChildren.length) {
+			let t = 1;
 			const itemChildren = [
-                ...data.data.children.map((item, i) => {
-                    if (i === 0) {
-                        t = 0
-                    } else if (i % 2 === 0){
-                        t = -t
-                    } else {
-                        t = i + t
-                    }
+				...data.data.children.map((item, i) => {
+					if (i === 0) {
+						t = 0;
+					} else if (i % 2 === 0) {
+						t = -t;
+					} else {
+						t = i + t;
+					}
 					return {
 						id: item.id,
 						type: item?.children?.length ? "default" : "output",
@@ -172,7 +98,10 @@ const ExpandAndCollapse = (props) => {
 							parent: item.parent,
 						},
 
-						position: { x: data.position.x + t * 200, y: data.position.y + 200 },
+						position: {
+							x: data.position.x + t * 200,
+							y: data.position.y + 200,
+						},
 						// sourcePosition: 'right',
 						// targetPosition: 'left'
 					};
@@ -192,42 +121,40 @@ const ExpandAndCollapse = (props) => {
 				}),
 			]);
 			setNodes(nodes.concat(itemChildren));
-        }
-        else {
-			childs=[]
-			childAppender(initialNodes,data.id);
-			console.log(childs);
-            setNodes([...nodes.filter((item) => !childs.includes(item.id) )]);
-            // console.log(nodes)
+		} else {
+			childs = [];
+			childAppender(getNodes, data.id);
+			// console.log(childs);
+			setNodes([...nodes.filter((item) => !childs.includes(item.id))]);
+			// console.log(nodes)
 			setEdges([...edges.filter((item) => data.id !== item.source)]);
 		}
 	};
 
-	function childChecker(element){
-		console.log(element);
+	function childChecker(element) {
+		// console.log(element);
 		return false;
 	}
 
-	let checkflag=false;
-	let childs=[]
-	function childAppender(array,reqd){
-		array.forEach((ele)=>{
-			if(checkflag===false){
-				if(ele.parent===reqd){
-					checkflag=true;
+	let checkflag = false;
+	let childs = [];
+	function childAppender(array, reqd) {
+		array.forEach((ele) => {
+			if (checkflag === false) {
+				if (ele.parent === reqd) {
+					checkflag = true;
 				}
 			}
-			if(checkflag===true ){
+			if (checkflag === true) {
 				childs.push(ele.id);
 			}
-			if(ele.children && ele.children.length!==0){
-				childAppender(ele.children,reqd);
+			if (ele.children && ele.children.length !== 0) {
+				childAppender(ele.children, reqd);
+			} else {
+				return;
 			}
-			else{
-				return
-			}
-		})
-		checkflag=false;
+		});
+		checkflag = false;
 	}
 
 	return (
@@ -246,8 +173,8 @@ const ExpandAndCollapse = (props) => {
 				fitView
 				maxZoom={0.9}
 				defaultViewport={{ x: 1, y: 1, zoom: 0.5 }}
-                fitViewOptions={fitViewOptions}
-                proOptions={proOptions}
+				fitViewOptions={fitViewOptions}
+				proOptions={proOptions}
 			/>
 		</div>
 	);
