@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
 	useNodesState,
+	useReactFlow,
 	useEdgesState,
 	addEdge,
 	ReactFlowProvider,
@@ -11,12 +12,9 @@ import "reactflow/dist/style.css";
 import initialEdges from "./initialEdges";
 import initialNodes from "./initialNodes";
 import axios from "axios";
-
-// import './index.css';
-var tryNodes = []
+var tryNodes = [];
 
 const proOptions = { hideAttribution: true };
-// tryNodes !==[] && console.log(tryNodes)
 
 let id = 1;
 const getId = () => `${id++}`;
@@ -25,39 +23,40 @@ const fitViewOptions = {
 	padding: 1,
 };
 
+const edgeOptions = {
+	animated: true,
+	style: {
+		stroke: "white",
+	},
+};
+
+let nodeId = 3;
+let nodeLabel = "";
+
 const ExpandAndCollapse = (props) => {
 	const reactFlowWrapper = useRef(null);
 	const [nodes, setNodes, onNodesChange] = useNodesState([]);
 	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 	const [getNodes, setgetNodes] = useState([]);
-	const onConnect = useCallback(
-		(params) => setEdges((eds) => addEdge(params, eds)),
-		[]
-    );
-    
-    const fetch = async () => {
-        const article = {
-            password: "RAJA897924767",
-            file: "feb.pdf",
-            credit_score: 8.7,
-        };
-        await axios
-            .post(
-                "https://fin-sights.onrender.com/api/trail_analysis/v1/fund_flow",
-                article
-            )
-            .then((res) => {
-                // console.log(res.data.data)
-                // setgetNodes([response.data.data]);
-                // res.data.data.children.forEach((item) => {
-                tryNodes.push(res.data.data);
-                setgetNodes(tryNodes)
-                // console.log(tryNodes)
-                // })
-                
-            });
-    };
-    fetch();
+	const reactFlowInstance = useReactFlow();
+
+	const fetch = async () => {
+		const article = {
+			password: "RAJA897924767",
+			file: "https://kavach.s3.amazonaws.com/XXXXXXXXXXX4755-01-04-2022to31-03-2023.pdf",
+			credit_score: 8.7,
+		};
+		await axios
+			.post(
+				"https://fin-sights.onrender.com/api/trail_analysis/v1/fund_flow",
+				article
+			)
+			.then((res) => {
+				tryNodes.push(res.data.data);
+				setgetNodes(tryNodes);
+			});
+	};
+	fetch();
 
 	useEffect(() => {
 		setNodes([
@@ -67,15 +66,18 @@ const ExpandAndCollapse = (props) => {
 					type: item?.children?.length ? "default" : "output",
 					data: { label: item.name, children: item.children },
 					position: { x: 0, y: 10000 },
-					// sourcePosition: 'right',
-					// targetPosition: 'left'
 				};
 			}),
 		]);
 	}, [getNodes]);
 
-	// console.log(nodes);
-
+	const onConnect = useCallback(
+		(params) =>
+			setEdges((eds) =>
+				addEdge({ ...params, animated: true, style: { stroke: "#fff" } }, eds)
+			),
+		[]
+	);
 	const handleNodeClick = async (e, data) => {
 		const findChildren = nodes.filter((item) => item?.data?.parent === data.id); // data gives access to label, parent, children
 		if (!findChildren.length) {
@@ -102,8 +104,6 @@ const ExpandAndCollapse = (props) => {
 							x: data.position.x + t * 200,
 							y: data.position.y + 200,
 						},
-						// sourcePosition: 'right',
-						// targetPosition: 'left'
 					};
 				}),
 			];
@@ -131,10 +131,23 @@ const ExpandAndCollapse = (props) => {
 		}
 	};
 
-	function childChecker(element) {
-		// console.log(element);
-		return false;
-	}
+	const onClick = useCallback((event) => {
+		event.preventDefault();
+		console.log(nodeLabel);
+		const id = `${++nodeId}`;
+		const label = nodeLabel;
+		const newNode = {
+			id,
+			position: {
+				x: 0,
+				y: 100,
+			},
+			data: {
+				label,
+			},
+		};
+		reactFlowInstance.addNodes(newNode);
+	}, []);
 
 	let checkflag = false;
 	let childs = [];
@@ -156,6 +169,13 @@ const ExpandAndCollapse = (props) => {
 		});
 		checkflag = false;
 	}
+	const test = () => {
+		// console.log(document.getElementById("-1"));
+		console.log(document.querySelector("div[data-id='-1']"));
+		let data = document.querySelector("div[data-id='-1']")
+		// data.classList.add("bg-red-500")
+		data.classList.add("bg-red-500")
+	};
 
 	return (
 		<div
@@ -163,6 +183,14 @@ const ExpandAndCollapse = (props) => {
 			ref={reactFlowWrapper}
 			style={{ width: "100vw", height: "100vh" }}
 		>
+			<button
+				onClick={() => {
+					test();
+				}}
+			>
+				test
+			</button>
+			{/* <CustomNode/> */}
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
@@ -171,11 +199,31 @@ const ExpandAndCollapse = (props) => {
 				onConnect={onConnect}
 				onNodeClick={handleNodeClick}
 				fitView
+				// nodeTypes={nodeTypes}
+				defaultEdgeOptions={edgeOptions}
 				maxZoom={0.9}
-				defaultViewport={{ x: 1, y: 1, zoom: 0.5 }}
+				defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
 				fitViewOptions={fitViewOptions}
 				proOptions={proOptions}
+				className="bg-sky-300"
 			/>
+			<form className="absolute z-10 top-2 right-5">
+				<input
+					type="text"
+					placeholder="Enter Node Label"
+					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					onChange={(event) => {
+						nodeLabel = event.target.value;
+					}}
+				/>
+				<button
+					type="submit"
+					onClick={onClick}
+					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+				>
+					add node
+				</button>
+			</form>
 		</div>
 	);
 };

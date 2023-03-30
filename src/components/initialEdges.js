@@ -1,5 +1,4 @@
-import { ReactFlow, MarkerType } from "reactflow";
-const initialEdges = [
+const initEdges = [
 	{
 		id: "edges-e5-7",
 		source: "0",
@@ -8,10 +7,10 @@ const initialEdges = [
 		labelBgPadding: [8, 4],
 		labelBgBorderRadius: 4,
 		labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
-		markerEnd: {
-			type: MarkerType.ArrowClosed,
-		},
+		// markerEnd: {
+		// 	type: MarkerType.ArrowClosed,
+		// },
 	},
 ];
 
-export default initialEdges
+export default initEdges

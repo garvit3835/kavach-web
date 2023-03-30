@@ -23,79 +23,69 @@ import request from "./request";
 // const initialNodes = await fetchData()
 
 
-// const initialNodes = [
-// 	{
-// 		id: "1",
-// 		name: "test",
-// 		children: [
-// 			{
-// 				id: "2",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "3",
-// 						name: "c",
-// 						parent: "2",
-// 						children: [{
-// 							id: "4",
-// 							parent: "3",
-// 							name: "test123",
-// 						}],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "5",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "6",
-// 						name: "c",
-// 						parent: "5",
-// 						children: [
-// 							{
-// 								id: "7",
-// 								parent: "6",
-// 								name: "hello",
-// 							},
-// 						],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "8",
-// 				name: "b",
-// 				parent: "1",
-// 				children: [
-// 					{
-// 						id: "9",
-// 						name: "c",
-// 						parent: "8",
-// 						children: [
-// 							{
-// 								id: "10",
-// 								parent: "9",
-// 								name: "d",
-// 							},
-// 						],
-// 					},
-// 				],
-// 			},
-// 			{
-// 				id: "11",
-// 				name: "f",
-// 				parent: "1",
-// 			},
-// 		],
-// 	},
-// ];
+const initNodes = [
+	{
+		id: "1",
+		type: "custom",
+		position: { x: 0, y: 10000 },
+		data: {
+			label: "Jane Doe",
+			job: "11183711193",
+			children: [
+				{
+					id: "2",
+					type: "custom",
+					parent: "1",
+					data: {
+						label: "Tyler Weary",
+						job: "22283183843",
+					},
+
+					// position: { x: -200, y: 200 },
+				},
+				{
+					id: "3",
+					type: "custom",
+					parent: "1",
+					data: {
+						label: "Kristi Price",
+						job: "3637329223",
+						children: [
+							{
+								id: "4",
+								type: "custom",
+								parent: "3",
+								data: {
+									label: "Kristi Price",
+									job: "4338493383",
+									warning: true,
+								},
+								children: null,
+
+								// position: { x: 200, y: 200 },
+							},
+						],
+					},
+					// position: { x: 200, y: 200 },
+				},
+				{
+					id: "5",
+					type: "custom",
+					parent: "1",
+					data: { label: "Kristi Price", job: "3843738293", warning: true },
+					// position: { x: 200, y: 200 },
+				},
+			],
+		},
+		// position: { x: 0, y: 50 },
+	},
+];
 
 const initialNodes = [
 	{
 		id: "-1",
 		name: "Transactions",
+		style: {color: "red"},
 		children: [
 			{
 				txn_time: "2023-02-11T00:00:00Z",
@@ -174,4 +164,4 @@ const initialNodes = [
 	},
 ];
 
-export default initialNodes
+export default initNodes
