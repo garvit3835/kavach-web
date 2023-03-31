@@ -12,9 +12,10 @@ import initNodes from "./initialNodes.js";
 import initEdges from "./initialEdges.js";
 import customNode from "./customNode.js";
 
-const nodeTypes = {
-	custom: customNode,
-};
+const nodeTypes = { custom: customNode };
+const proOptions = { hideAttribution: true };
+const fitViewOptions = { padding: 1 };
+const edgeOptions = { animated: true, style: { stroke: "black" } };
 
 let checkflag = false;
 let childs = [];
@@ -58,9 +59,6 @@ function childAppender(array, reqd) {
 // 		position: { x: 200, y: 200 },
 // 	},
 // ];
-
-
-
 
 // const initEdges = [
 // 	{
@@ -151,6 +149,11 @@ const Flow = () => {
 				onConnect={onConnect}
 				nodeTypes={nodeTypes}
 				fitView
+				defaultEdgeOptions={edgeOptions}
+				maxZoom={0.9}
+				defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+				fitViewOptions={fitViewOptions}
+				proOptions={proOptions}
 				className="bg-teal-100"
 			>
 				<MiniMap />

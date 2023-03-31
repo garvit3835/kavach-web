@@ -14,19 +14,19 @@ import initialNodes from "./initialNodes";
 import axios from "axios";
 var tryNodes = [];
 
+const fitViewOptions = { padding: 1 };
+
 const proOptions = { hideAttribution: true };
 
 let id = 1;
 const getId = () => `${id++}`;
 
-const fitViewOptions = {
-	padding: 1,
-};
+
 
 const edgeOptions = {
 	animated: true,
 	style: {
-		stroke: "white",
+		stroke: "black",
 	},
 };
 

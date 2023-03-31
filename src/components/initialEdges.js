@@ -6,7 +6,7 @@ const initEdges = [
 		label: "+",
 		labelBgPadding: [8, 4],
 		labelBgBorderRadius: 4,
-		labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
+		labelBgStyle: { fill: "#000000", color: "#000000", fillOpacity: 1 },
 		// markerEnd: {
 		// 	type: MarkerType.ArrowClosed,
 		// },

@@ -34,18 +34,14 @@ const initNodes = [
 			children: [
 				{
 					id: "2",
-					type: "custom",
 					parent: "1",
 					data: {
 						label: "Tyler Weary",
 						job: "22283183843",
 					},
-
-					// position: { x: -200, y: 200 },
 				},
 				{
 					id: "3",
-					type: "custom",
 					parent: "1",
 					data: {
 						label: "Kristi Price",
@@ -53,7 +49,6 @@ const initNodes = [
 						children: [
 							{
 								id: "4",
-								type: "custom",
 								parent: "3",
 								data: {
 									label: "Kristi Price",
@@ -61,23 +56,17 @@ const initNodes = [
 									warning: true,
 								},
 								children: null,
-
-								// position: { x: 200, y: 200 },
 							},
 						],
 					},
-					// position: { x: 200, y: 200 },
 				},
 				{
 					id: "5",
-					type: "custom",
 					parent: "1",
 					data: { label: "Kristi Price", job: "3843738293", warning: true },
-					// position: { x: 200, y: 200 },
 				},
 			],
 		},
-		// position: { x: 0, y: 50 },
 	},
 ];
 
